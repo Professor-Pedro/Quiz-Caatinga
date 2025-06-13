@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Quiz da Caatinga</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #a2d5c6, #077b8a);
+    color: #fff;
+  }
+  #menu {
+    text-align: center;
+    margin-top: 50px;
+  }
+  #menu button {
+    margin: 10px;
+    padding: 15px 25px;
+    background-color: #05668d;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  #menu button:hover {
+    background-color: #028090;
+  }
+  #jogo {
+    padding: 40px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.4);
+    min-height: 100vh;
+  }
+  #opcoes button {
+    display: block;
+    margin: 10px auto;
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #00a896;
+    color: white;
+    border: none;
+    border-radius: 8px;
+  }
+  #opcoes button:hover {
+    background-color: #02c39a;
+  }
+  .hidden {
+    display: none;
+  }
+  #recompensa {
+    font-size: 24px;
+    color: gold;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+<div id="menu">
+  <p style="font-size:16px; margin-bottom: 20px;">Criado por Professor Pedro - Escola Francisco André de Souza</p>
+  <h1>Quiz da Caatinga</h1>
+  <button class="fase-btn" data-fase="Solo">Fase: Solo</button>
+  <button class="fase-btn" data-fase="Clima">Fase: Clima</button>
+  <button class="fase-btn" data-fase="Fauna">Fase: Fauna</button>
+  <button class="fase-btn" data-fase="Flora">Fase: Flora</button>
+  <button class="fase-btn" data-fase="Soluções Sustentáveis">Fase: Soluções Sustentáveis</button>
+</div>
+<div id="jogo" class="hidden">
+  <h2 id="fase-atual"></h2>
+  <p id="pergunta"></p>
+  <div id="opcoes"></div>
+  <p id="feedback"></p>
+  <button id="proxima-pergunta" class="hidden">Próxima Pergunta</button>
+  <div id="recompensa" class="hidden">✨ Parabéns! Você ganhou a recompensa!✨</div>
+</div>
+
+<script>
+const perguntas = {
+  "Solo": [
+    {
+      "pergunta": "Qual tipo de solo predomina na Caatinga?",
+      "opcoes": [
+        "Arenoso",
+        "Argiloso",
+        "Calcário",
+        "Aluvial"
+      ],
+      "resposta": "Arenoso"
+    },
+    {
+      "pergunta": "O solo da Caatinga geralmente possui:",
+      "opcoes": [
+        "Alta fertilidade",
+        "Pouca profundidade",
+        "Muita água",
+        "Muita matéria orgânica"
+      ],
+      "resposta": "Pouca profundidade"
+    },
+    {
+      "pergunta": "Como é o solo calcário?",
+      "opcoes": [
+        "Rico em nutrientes",
+        "Cheio de pedras e calcário",
+        "Muito arenoso",
+        "Muito úmido"
+      ],
+      "resposta": "Cheio de pedras e calcário"
+    },
+    {
+      "pergunta": "Qual é o principal desafio do solo da Caatinga?",
+      "opcoes": [
+        "Erosão",
+        "Desmatamento",
+        "Poluição",
+        "Urbanização"
+      ],
+      "resposta": "Erosão"
+    },
+    {
+      "pergunta": "O solo arenoso da Caatinga facilita:",
+      "opcoes": [
+        "A infiltração de água",
+        "O crescimento de grandes árvores",
+        "A fixação de nitrogênio",
+        "O alagamento"
+      ],
+      "resposta": "A infiltração de água"
+    },
+    {
+      "pergunta": "Como a vegetação ajuda o solo da Caatinga?",
+      "opcoes": [
+        "Enriquecendo com matéria orgânica",
+        "Compactando o solo",
+        "Retendo pouca água",
+        "Impedindo a erosão"
+      ],
+      "resposta": "Enriquecendo com matéria orgânica"
+    },
+    {
+      "pergunta": "Qual é uma característica do solo da Caatinga?",
+      "opcoes": [
+        "Elevada acidez",
+        "Raso e pedregoso",
+        "Muito fértil",
+        "Pouco permeável"
+      ],
+      "resposta": "Raso e pedregoso"
+    },
+    {
+      "pergunta": "O solo da Caatinga tem baixo teor de:",
+      "opcoes": [
+        "Argila",
+        "Areia",
+        "Nutrientes",
+        "Calcário"
+      ],
+      "resposta": "Nutrientes"
+    },
+    {
+      "pergunta": "O solo da Caatinga é pobre em:",
+      "opcoes": [
+        "Minerais",
+        "Água e matéria orgânica",
+        "Rochas",
+        "Alumínio"
+      ],
+      "resposta": "Água e matéria orgânica"
+    },
+    {
+      "pergunta": "A principal formação rochosa da Caatinga é:",
+      "opcoes": [
+        "Arenito",
+        "Calcário",
+        "Basalto",
+        "Granito"
+      ],
+      "resposta": "Calcário"
+    }
+  ],
+  "Clima": [
+    {
+      "pergunta": "Qual a característica principal do clima da Caatinga?",
+      "opcoes": [
+        "Seco",
+        "Úmido",
+        "Chuvoso o ano todo",
+        "Temperado"
+      ],
+      "resposta": "Seco"
+    },
+    {
+      "pergunta": "A estação seca pode durar até quantos meses?",
+      "opcoes": [
+        "3",
+        "5",
+        "9",
+        "12"
+      ],
+      "resposta": "9"
+    },
+    {
+      "pergunta": "Qual o tipo climático típico da Caatinga?",
+      "opcoes": [
+        "Semiárido",
+        "Tropical úmido",
+        "Mediterrâneo",
+        "Equatorial"
+      ],
+      "resposta": "Semiárido"
+    },
+    {
+      "pergunta": "O clima semiárido da Caatinga apresenta:",
+      "opcoes": [
+        "Chuvas bem distribuídas",
+        "Baixa pluviosidade",
+        "Alta umidade",
+        "Inverno rigoroso"
+      ],
+      "resposta": "Baixa pluviosidade"
+    },
+    {
+      "pergunta": "A maior parte da chuva ocorre em:",
+      "opcoes": [
+        "Verão",
+        "Outono",
+        "Inverno",
+        "Primavera"
+      ],
+      "resposta": "Verão"
+    },
+    {
+      "pergunta": "As temperaturas médias anuais na Caatinga ficam em torno de:",
+      "opcoes": [
+        "15 °C",
+        "20 °C",
+        "27 °C",
+        "10 °C"
+      ],
+      "resposta": "27 °C"
+    },
+    {
+      "pergunta": "O que caracteriza o clima da Caatinga?",
+      "opcoes": [
+        "Seca longa e calor intenso",
+        "Frio e neve",
+        "Umidade constante",
+        "Ventos fortes o ano todo"
+      ],
+      "resposta": "Seca longa e calor intenso"
+    },
+    {
+      "pergunta": "Durante o ano, as chuvas são:",
+      "opcoes": [
+        "Regulares",
+        "Escassas e mal distribuídas",
+        "Constantes",
+        "Torrenciais"
+      ],
+      "resposta": "Escassas e mal distribuídas"
+    },
+    {
+      "pergunta": "O clima influencia diretamente a:",
+      "opcoes": [
+        "Agricultura e vegetação",
+        "Urbanização",
+        "Indústria pesada",
+        "Poluição sonora"
+      ],
+      "resposta": "Agricultura e vegetação"
+    },
+    {
+      "pergunta": "A variação climática atual pode causar:",
+      "opcoes": [
+        "Mais chuvas",
+        "Menos secas",
+        "Aumento da desertificação",
+        "Estações bem definidas"
+      ],
+      "resposta": "Aumento da desertificação"
+    }
+  ],
+  "Fauna": [
+    {
+      "pergunta": "Qual desses animais é típico da Caatinga?",
+      "opcoes": [
+        "Onça-pintada",
+        "Tamanduá-bandeira",
+        "Asa-branca",
+        "Mico-leão-dourado"
+      ],
+      "resposta": "Asa-branca"
+    },
+    {
+      "pergunta": "Que animal da Caatinga é conhecido por se camuflar?",
+      "opcoes": [
+        "Tamanduá",
+        "Tatu-bola",
+        "Sururu",
+        "Sapo-cururu"
+      ],
+      "resposta": "Tatu-bola"
+    },
+    {
+      "pergunta": "Qual é um réptil comum da Caatinga?",
+      "opcoes": [
+        "Cobra coral",
+        "Lagarto teiú",
+        "Cascavel",
+        "Jacaré-açu"
+      ],
+      "resposta": "Cascavel"
+    },
+    {
+      "pergunta": "Ave símbolo da Caatinga:",
+      "opcoes": [
+        "Arara-azul",
+        "Papagaio",
+        "Asa-branca",
+        "Coruja-buraqueira"
+      ],
+      "resposta": "Asa-branca"
+    },
+    {
+      "pergunta": "Mamífero característico da Caatinga:",
+      "opcoes": [
+        "Capivara",
+        "Lobo-guará",
+        "Tatu-peba",
+        "Guaxinim"
+      ],
+      "resposta": "Tatu-peba"
+    },
+    {
+      "pergunta": "Os animais da Caatinga evitam:",
+      "opcoes": [
+        "Chuva",
+        "Seca",
+        "Calor do dia",
+        "Frio"
+      ],
+      "resposta": "Calor do dia"
+    },
+    {
+      "pergunta": "O que muitos animais fazem para sobreviver à seca?",
+      "opcoes": [
+        "Migram",
+        "Dormem",
+        "Cavam",
+        "Voam para o sul"
+      ],
+      "resposta": "Migram"
+    },
+    {
+      "pergunta": "A raposa-do-campo é:",
+      "opcoes": [
+        "Ave",
+        "Réptil",
+        "Mamífero",
+        "Anfíbio"
+      ],
+      "resposta": "Mamífero"
+    },
+    {
+      "pergunta": "O veado-catingueiro é um exemplo de:",
+      "opcoes": [
+        "Herbívoro",
+        "Carnívoro",
+        "Onívoro",
+        "Invasor"
+      ],
+      "resposta": "Herbívoro"
+    },
+    {
+      "pergunta": "Inseto comum na Caatinga:",
+      "opcoes": [
+        "Grilo",
+        "Formiga",
+        "Cupim",
+        "Besouro rola-bosta"
+      ],
+      "resposta": "Cupim"
+    }
+  ],
+  "Flora": [
+    {
+      "pergunta": "Qual planta é símbolo da Caatinga?",
+      "opcoes": [
+        "Ipê-amarelo",
+        "Mandacaru",
+        "Jacarandá",
+        "Cacto-de-natal"
+      ],
+      "resposta": "Mandacaru"
+    },
+    {
+      "pergunta": "Qual árvore da Caatinga perde as folhas na seca?",
+      "opcoes": [
+        "Umbuzeiro",
+        "Carnaúba",
+        "Jatobá",
+        "Flamboyant"
+      ],
+      "resposta": "Umbuzeiro"
+    },
+    {
+      "pergunta": "O que é xerófita?",
+      "opcoes": [
+        "Planta de sombra",
+        "Planta que vive na água",
+        "Planta que armazena água",
+        "Planta medicinal"
+      ],
+      "resposta": "Planta que armazena água"
+    },
+    {
+      "pergunta": "A jurema-preta é conhecida por:",
+      "opcoes": [
+        "Folhas grandes",
+        "Ser medicinal",
+        "Ter espinhos",
+        "Ser aquática"
+      ],
+      "resposta": "Ser medicinal"
+    },
+    {
+      "pergunta": "O xique-xique é um tipo de:",
+      "opcoes": [
+        "Árvore",
+        "Arbusto",
+        "Cacto",
+        "Orquídea"
+      ],
+      "resposta": "Cacto"
+    },
+    {
+      "pergunta": "A caatinga é composta principalmente por:",
+      "opcoes": [
+        "Plantas aquáticas",
+        "Gramíneas",
+        "Vegetação rasteira e arbustiva",
+        "Floresta densa"
+      ],
+      "resposta": "Vegetação rasteira e arbustiva"
+    },
+    {
+      "pergunta": "As plantas da Caatinga têm adaptações para:",
+      "opcoes": [
+        "Sol forte",
+        "Frio intenso",
+        "Sombra",
+        "Ambiente alagado"
+      ],
+      "resposta": "Sol forte"
+    },
+    {
+      "pergunta": "O umbuzeiro é importante porque:",
+      "opcoes": [
+        "Dá madeira boa",
+        "Dá frutos comestíveis",
+        "Serve como sombra",
+        "É raro"
+      ],
+      "resposta": "Dá frutos comestíveis"
+    },
+    {
+      "pergunta": "A carnaúba é conhecida como:",
+      "opcoes": [
+        "Árvore da sabedoria",
+        "Árvore do sertão",
+        "Árvore da vida",
+        "Árvore que chora"
+      ],
+      "resposta": "Árvore da vida"
+    },
+    {
+      "pergunta": "Planta com raízes profundas para buscar água:",
+      "opcoes": [
+        "Mandacaru",
+        "Umbuzeiro",
+        "Jurema",
+        "Juazeiro"
+      ],
+      "resposta": "Juazeiro"
+    }
+  ],
+  "Soluções Sustentáveis": [
+    {
+      "pergunta": "Fonte de energia limpa para o semiárido:",
+      "opcoes": [
+        "Carvão",
+        "Gasolina",
+        "Energia solar",
+        "Diesel"
+      ],
+      "resposta": "Energia solar"
+    },
+    {
+      "pergunta": "Qual prática ajuda a conservar o solo?",
+      "opcoes": [
+        "Queimada",
+        "Pastoreio intensivo",
+        "Cobertura vegetal",
+        "Desmatamento"
+      ],
+      "resposta": "Cobertura vegetal"
+    },
+    {
+      "pergunta": "Agricultura sustentável usa:",
+      "opcoes": [
+        "Agrotóxicos",
+        "Rotação de culturas",
+        "Monocultura",
+        "Muita irrigação"
+      ],
+      "resposta": "Rotação de culturas"
+    },
+    {
+      "pergunta": "O que ajuda a manter a biodiversidade?",
+      "opcoes": [
+        "Caça",
+        "Preservação de habitat",
+        "Poluição",
+        "Desmatamento"
+      ],
+      "resposta": "Preservação de habitat"
+    },
+    {
+      "pergunta": "Qual é uma prática sustentável de uso da água?",
+      "opcoes": [
+        "Irrigação por aspersão",
+        "Gotejamento",
+        "Inundação",
+        "Canal aberto"
+      ],
+      "resposta": "Gotejamento"
+    },
+    {
+      "pergunta": "Iniciativa sustentável na Caatinga:",
+      "opcoes": [
+        "Reflorestamento",
+        "Expansão urbana",
+        "Criação extensiva",
+        "Uso de lenha"
+      ],
+      "resposta": "Reflorestamento"
+    },
+    {
+      "pergunta": "O que evita a desertificação?",
+      "opcoes": [
+        "Uso excessivo do solo",
+        "Vegetação permanente",
+        "Corte de árvores",
+        "Solo exposto"
+      ],
+      "resposta": "Vegetação permanente"
+    },
+    {
+      "pergunta": "As cisternas servem para:",
+      "opcoes": [
+        "Armazenar água da chuva",
+        "Plantar",
+        "Guardar sementes",
+        "Criar peixes"
+      ],
+      "resposta": "Armazenar água da chuva"
+    },
+    {
+      "pergunta": "Técnica que protege o solo da erosão:",
+      "opcoes": [
+        "Queimada",
+        "Plantio direto",
+        "Roçada",
+        "Arações profundas"
+      ],
+      "resposta": "Plantio direto"
+    },
+    {
+      "pergunta": "A agroecologia promove:",
+      "opcoes": [
+        "Lucro rápido",
+        "Sustentabilidade",
+        "Uso de veneno",
+        "Pecuária intensiva"
+      ],
+      "resposta": "Sustentabilidade"
+    }
+  ]
+};
+
+let faseAtual = "", perguntasDaFase = [], indicePergunta = 0, acertos = 0, pontos = 0;
+
+document.querySelectorAll(".fase-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const faseSelecionada = btn.dataset.fase;
+    if (!perguntas[faseSelecionada]) {
+      alert("Fase ainda não implementada: " + faseSelecionada);
+      return;
+    }
+    faseAtual = faseSelecionada;
+    perguntasDaFase = perguntas[faseAtual];
+    indicePergunta = 0;
+    acertos = 0;
+    pontos = 0;
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("jogo").classList.remove("hidden");
+    document.getElementById("fase-atual").innerText = "Fase: " + faseAtual;
+    mostrarPergunta();
+  });
+});
+
+function mostrarPergunta() {
+  const perguntaAtual = perguntasDaFase[indicePergunta];
+  if (!perguntaAtual) {
+    alert("Erro ao carregar pergunta.");
+    return;
+  }
+
+  document.getElementById("pergunta").innerText = perguntaAtual.pergunta;
+  const opcoesDiv = document.getElementById("opcoes");
+  opcoesDiv.innerHTML = "";
+  document.getElementById("feedback").innerText = "";
+  document.getElementById("proxima-pergunta").classList.add("hidden");
+
+  perguntaAtual.opcoes.forEach(opcao => {
+    const btn = document.createElement("button");
+    btn.innerText = opcao;
+    btn.onclick = () => checarResposta(opcao);
+    opcoesDiv.appendChild(btn);
+  });
+}
+
+function checarResposta(resposta) {
+  const correta = perguntasDaFase[indicePergunta].resposta;
+  const feedback = document.getElementById("feedback");
+
+  const botoes = document.querySelectorAll("#opcoes button");
+  botoes.forEach(btn => {
+    btn.disabled = true;
+    if (btn.innerText === correta) {
+      btn.style.backgroundColor = '#4CAF50';
+    } else {
+      btn.style.backgroundColor = '#e74c3c';
+    }
+  });
+
+  if (resposta === correta) {
+    acertos++;
+    pontos += 10;
+    feedback.innerText = `✔️ Correto! (+10 pontos) Pontuação: ${pontos}`;
+  } else {
+    feedback.innerText = `❌ Errado! A certa era: ${correta}. Pontuação: ${pontos}`;
+  }
+
+  document.getElementById("proxima-pergunta").classList.remove("hidden");
+}
+
+document.getElementById("proxima-pergunta").addEventListener("click", () => {
+  indicePergunta++;
+  if (indicePergunta < perguntasDaFase.length) {
+    mostrarPergunta();
+  } else {
+    if (acertos >= 5) {
+      document.getElementById("recompensa").classList.remove("hidden");
+      alert(`🎉 Você passou de fase com ${pontos} pontos!`);
+    } else {
+      alert(`😢 Você não acertou o mínimo de 5. Pontuação: ${pontos}. Tente novamente.`);
+    }
+
+    document.getElementById("menu").classList.remove("hidden");
+    document.getElementById("jogo").classList.add("hidden");
+    document.getElementById("recompensa").classList.add("hidden");
+    document.getElementById("proxima-pergunta").classList.add("hidden");
+  }
+});
+</script>
+</body>
+</html>
+
+</html>
